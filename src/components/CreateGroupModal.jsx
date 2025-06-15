@@ -39,6 +39,7 @@ const CreateGroupModal = ({ isOpen, onClose, onCreateGroup }) => {
           <div className="mb-4">
             <label className="block text-sm font-medium mb-2">Group Name</label>
             <input
+              autoFocus
               type="text"
               value={groupName}
               onChange={(e) => setGroupName(e.target.value)}

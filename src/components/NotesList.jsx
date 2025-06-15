@@ -1,6 +1,7 @@
 import React from 'react'
 
 function NotesList({notes}) {
+
   return (
     <div>
     {notes.map((note, index) => (

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import CreateGroupModal from './components/CreateGroupModal';
@@ -7,37 +7,58 @@ import NotesPanel from './components/NotesPanel';
 import './styles/index.css';
 
 // ===============================layout==============================================================================
+import { openDB } from 'idb';
+import { dbPromise } from './db.js';
+
+const saveGroupToDB = async (group) => {
+  const db = await dbPromise;
+  await db.put('groups', group);
+};
+
+const getGroupsFromDB = async () => {
+  const db = await dbPromise;
+  return await db.getAll('groups');
+};
+  
 
 const Layout = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [groups, setGroups] = useState([]);
 
-  const [groups, setGroups] = useState([   
-    { id: 'cn', name: 'CSS Notes', color: 'bg-pink-400' },
-    { id: 'pn', name: 'Python Notes', color: 'bg-pink-500' },
-  ]);
+    useEffect(() => {
+    (async () => {
+      const savedGroups = await getGroupsFromDB();
+      setGroups(savedGroups);
+    })();
+  }, []);
 
-  const createGroup = (name, color) => {
+
+    const createGroup = async (name, color) => {
     const id = name.toLowerCase().replace(/\s+/g, '-');
-    setGroups([...groups, { id, name, color }]);
+    const newGroup = { id, name, color };
+    await saveGroupToDB(newGroup);
+    setGroups([...groups, newGroup]);
     setIsModalOpen(false);
   };
 
+
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen bg-gray-100 overflow-hidden">
       <Sidebar 
         groups={groups} 
         onCreateClick={() => setIsModalOpen(true) }
       />
 
-    {isModalOpen && (
+      {isModalOpen && (
         <CreateGroupModal 
           isOpen={isModalOpen} 
           onClose={() => setIsModalOpen(false)}
           onCreateGroup={createGroup}
         />
-)}
+      )}
 
-      <div className="flex-1">
+      {/* <div className="flex-1"> */}
+       <div className="flex-1 overflow-auto max-w-full">
         <Outlet context={{ groups }} />
       </div>
       
@@ -64,9 +85,15 @@ const router = createBrowserRouter(
       ],
     },
   ],
+
   {
     future: {
-      v7_relativeSplatPath: true,
+        v7_relativeSplatPath: true,
+        v7_skipActionErrorRevalidation: true,
+        v7_partialHydration: true,
+        v7_startTransition: true,
+        v7_fetcherPersist: true,
+        v7_normalizeFormMethod: true,
     },
   }
 );
