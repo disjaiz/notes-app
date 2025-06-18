@@ -24,7 +24,7 @@ const getGroupsFromDB = async () => {
 const Layout = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [groups, setGroups] = useState([]);
-  const [showSidebar, setShowSidebar] = useState(true);
+  const [showSidebar, setShowSidebar] = useState(false);
 
 
   const deleteGroup = async (groupId) => {
