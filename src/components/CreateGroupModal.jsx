@@ -26,12 +26,12 @@ const CreateGroupModal = ({ isOpen, onClose, onCreateGroup }) => {
     <div>
       {/* Overlay */}
       <div 
-        className="z-10 fixed inset-0 bg-black/50 modal-overlay" 
+        className="z-40 fixed inset-0 bg-black bg-opacity-70 modal-overlay" 
         onClick={onClose} 
       />
       
       {/* Modal */}
-      <div className="z-10 fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg w-96">
+      <div className="z-50 fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg w-96">
         <h2 className="text-xl font-semibold mb-4">Create New group</h2>
         
         <form onSubmit={handleSubmit}>
